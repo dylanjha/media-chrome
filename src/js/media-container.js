@@ -26,6 +26,8 @@ template.innerHTML = `
 
       /* Default dimensions */
       width: 720px;
+      max-width: 100%;
+
       height: 480px;
       background-color: #000;
     }
