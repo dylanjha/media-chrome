@@ -185,7 +185,7 @@ class MediaTimeRange extends MediaChromeRange {
         trackMouse();
 
         let offRangeHandler = (evt) => {
-          if (evt.target != this && !this.contains(evt.target)) {
+          if (evt.target !== this && !this.contains(evt.target) && evt.target.tagName !== 'MUX-PLAYER') {
             this.thumbnailPreview.style.display = 'none';
             window.removeEventListener('mousemove', offRangeHandler);
             rangeEntered = false;
