@@ -1,9 +1,9 @@
-const _ = require('lodash');
-const chokidar = require('chokidar');
-const esbuild = require('esbuild');
-const glob = require('tiny-glob');
-const serveHandler = require('serve-handler');
-const http = require('http');
+import _ from 'lodash';
+import chokidar from 'chokidar';
+import * as esbuild from 'esbuild';
+import glob from 'tiny-glob';
+import serveHandler from 'serve-handler';
+import http from 'http';
 
 const args = process.argv;
 const PORT = 3001;
@@ -56,3 +56,5 @@ if (args.includes('--dev')) {
 } else {
   build({ minify: true });
 }
+
+export {};
