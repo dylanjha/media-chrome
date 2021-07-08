@@ -1,7 +1,7 @@
 import MediaChromeButton from './src/js/media-chrome-button.js';
 // import MediaContainer from './src/js/media-container.js';
 import MediaController from './src/js/media-controller.js';
-import MediaChromeHTMLElement from './src/js/media-chrome-html-element.js';
+import MediaChromeHTMLElement from './src/js/media-chrome-html-element.ts';
 import MediaChromeRange from './src/js/media-chrome-range.js';
 import MediaControlBar from './src/js/media-control-bar.js';
 import MediaCurrentTimeDisplay from './src/js/media-current-time-display.js';

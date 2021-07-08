@@ -17,7 +17,26 @@ export const mediaUIEvents = {
   MEDIA_PLAYBACK_RATE_REQUEST:  'mediaplaybackraterequest',
 };
 
+type EventSettings = {
+  bubbles: boolean;
+  composed: boolean;
+  detail: any;
+}
+
 export class MediaChromeHTMLElement extends window.HTMLElement {
+  _mediaPaused: boolean;
+  _mediaMuted: boolean;
+  _mediaVolume: number;
+  _mediaVolumeLevel: string;
+  _mediaCurrentTime: number;
+  _mediaDuration: number;
+  _mediaIsFullscreen: boolean;
+  _mediaIsPip: boolean;
+  _mediaBuffered: number|null;
+  _mediaPreviewImage: string|null;
+  _mediaPreviewCoords: string|null;
+  _mediaPlaybackRate: number;
+
   constructor() {
     super();
 
@@ -55,7 +74,7 @@ export class MediaChromeHTMLElement extends window.HTMLElement {
     ].concat(super.observedAttributes || []);
   }
 
-  dispatchMediaEvent(eventName, eventSettings) {
+  dispatchMediaEvent(eventName: string, eventSettings: EventSettings) {
     eventSettings = Object.assign({
       bubbles: true,
       composed: true

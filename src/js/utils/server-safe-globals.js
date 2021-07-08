@@ -1,5 +1,6 @@
 const windowShim = {
   HTMLElement: function HTMLElement() {},
+  CustomEvent: function () {},
   customElements: {
     get: function(){},
     define: function(){},
