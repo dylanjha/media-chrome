@@ -12,6 +12,7 @@ import MediaMuteButton from './src/js/media-mute-button.js';
 import MediaPipButton from './src/js/media-pip-button.js';
 import MediaPlayButton from './src/js/media-play-button.js';
 import MediaPlaybackRateButton from './src/js/media-playback-rate-button.js';
+import MediaTextTrackSelector from './src/js/media-text-track-selector.js';
 import MediaPoster from './src/js/media-poster.js';
 import MediaProgressRange from './src/js/media-progress-range.js';
 import MediaSeekBackwardButton from './src/js/media-seek-backward-button.js';
@@ -56,6 +57,7 @@ export {
   MediaPipButton,
   MediaPlayButton,
   MediaPlaybackRateButton,
+  MediaTextTrackSelector,
   MediaPoster,
   MediaProgressRange,
   MediaSeekBackwardButton,
