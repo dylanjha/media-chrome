@@ -125,7 +125,7 @@ class MediaController extends MediaContainer {
 
         if (media && media.textTracks && media.textTracks.length) {
           let track = Array.prototype.find.call(media.textTracks, (t)=>{
-            return t.label == 'thumbnails';
+            return t.label === 'thumbnails';
           });
 
           if (!track) return;
@@ -230,6 +230,11 @@ class MediaController extends MediaContainer {
       });
       handler();
     });
+
+    const subtitleTracks = Array.prototype.filter.call(document.getElementsByTagName('video')[0].textTracks, (t) => t.kind === 'subtitles' || t.kind === 'captions');
+    this.propagateMediaState('mediaSubtitleTracks', JSON.stringify(subtitleTracks.map((t) => ({ kind: t.kind, label: t.label, language: t.language }))));
+
+    console.log('debug textTracks', subtitleTracks);
 
     // Update the media with the last set volume preference
     // This would preferably live with the media element,

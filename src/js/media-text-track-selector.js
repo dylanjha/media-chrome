@@ -1,56 +1,90 @@
 import MediaChromeButton from './media-chrome-button.js';
 import { defineCustomElement } from './utils/defineCustomElement.js';
 import { mediaUIEvents } from './media-chrome-html-element.js';
+import { Document as document } from './utils/server-safe-globals.js';
 
+const template = document.createElement('template');
 /*
   <media-playback-rate-button rates="1,1.5,2">
 */
 
 // const DEFAULT_RATES = [1, 1.25, 1.5, 1.75, 2];
 
+template.innerHTML = `
+  <style>
+    #container {
+      position: relative;
+    }
+    ul {
+      display: none;
+      position: absolute;
+      bottom: 30px;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+    ul.showing {
+      display: block;
+    }
+  </style>
+  <div id="container">
+    <ul></ul>
+    <button id="subtitlesButton">cc</button>
+  </div>
+`;
+
 class MediaTextTrackSelector extends MediaChromeButton {
   constructor() {
     super();
+    this._subtitleTextTracks = null;
+    this._toggleList = this.toggleList.bind(this);
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
-  /*
   static get observedAttributes() {
-    return ['rates'].concat(super.observedAttributes || []);
+    return ['media-subtitle-tracks'].concat(super.observedAttributes || []);
   }
 
-  set rates(rates) {
-    if (!rates) {
-      this._rates = DEFAULT_RATES;
-    } else {
-      if (typeof rates == 'string') {
-        rates = rates.split(/,\s?/)
-      }
+  connectedCallback () {
+    this.subtitlesButton = this.shadowRoot.querySelector('#subtitlesButton');
+    this.list = this.shadowRoot.querySelector('ul');
+    this.subtitlesButton.addEventListener('click', this._toggleList);
+  }
 
-      this._rates = rates;
+  set mediaSubtitleTracks (tracks) {
+    let parsed = null
+    try {
+      parsed = JSON.parse(tracks);
+      this._subtitleTextTracks = parsed;
+      this.renderTrackItems();
+    } catch (e) {
+      console.warn('Error parsing media-subtitle-tracks', e);
+      this._subtitleTextTracks = null;
     }
   }
 
-  get rates() {
-    return this._rates;
-  }
-  */
-
-  handleClick(e) {
-    console.log('debug click', e);
-    /*
-    const currentRate = this.mediaPlaybackRate;
-    let newRate = this.rates.find(r => r > currentRate);
-
-    if (!newRate) newRate = this.rates[0];
-
-    this.dispatchMediaEvent(mediaUIEvents.MEDIA_PLAYBACK_RATE_REQUEST, {
-      detail: newRate
-    })
-    */
+  get mediaSubtitleTracks () {
+    return this._subtitleTextTracks;
   }
 
-  mediaPlaybackRateSet(rate) {
-    this.nativeEl.innerHTML = `${rate}x`;
+  renderTrackItems () {
+    this.list.querySelectorAll('*').forEach(n => n.remove());
+    if (this._subtitleTextTracks && this._subtitleTextTracks.length) {
+      this._subtitleTextTracks.forEach((track) => {
+        const li = document.createElement('li');
+        li.innerText = track.label;
+        this.list.appendChild(li);
+      });
+    } else {
+      this.subtitlesButton.innerText = 'n/a';
+    }
+  }
+
+  toggleList (e) {
+    if (this.list.classList.contains('showing')) {
+      this.list.classList.remove('showing');
+    } else {
+      this.list.classList.add('showing');
+    }
   }
 }
 

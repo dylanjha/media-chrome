@@ -15,7 +15,7 @@ export const mediaUIEvents = {
   MEDIA_ENTER_PIP_REQUEST: 'mediaenterpiprequest',
   MEDIA_EXIT_PIP_REQUEST: 'mediaexitpiprequest',
   MEDIA_PLAYBACK_RATE_REQUEST:  'mediaplaybackraterequest',
-  MEDIA_TEXT_TRACK_REQUEST; 'mediatexttrackrequest',
+  MEDIA_TEXT_TRACK_REQUEST: 'mediatexttrackrequest',
 };
 
 export class MediaChromeHTMLElement extends window.HTMLElement {
@@ -343,7 +343,7 @@ export class MediaChromeHTMLElement extends window.HTMLElement {
   }
 
   set mediaPreviewCoords(coords) {
-    if (typeof coords == 'string') {
+    if (typeof coords === 'string') {
       coords = coords.split(',');
     }
 
@@ -356,6 +356,14 @@ export class MediaChromeHTMLElement extends window.HTMLElement {
     }
 
     if (this.mediaPreviewCoordsSet) this.mediaPreviewCoordsSet(coords);
+  }
+
+  get mediaSubtitlesTracks () {
+    return this._mediaSubtitleTracks;
+  }
+
+  set mediaSubtitlesTracks (tracks) {
+    console.log('debug setter mediaSubtitlesTracks', tracks);
   }
 }
 
