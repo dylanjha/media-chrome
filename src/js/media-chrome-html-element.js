@@ -78,7 +78,7 @@ export class MediaChromeHTMLElement extends window.HTMLElement {
     const propName = dashedToCamel(attrName);
 
     // Deprecate
-    if (propName == 'media') {
+    if (propName === 'media') {
       if (newValue === null) {
         this.media = null;
         return;
@@ -96,7 +96,7 @@ export class MediaChromeHTMLElement extends window.HTMLElement {
       return;
     }
 
-    if (propName == 'mediaController') {
+    if (propName === 'mediaController') {
       this[propName] = document.getElementById(newValue);
       return;
     }

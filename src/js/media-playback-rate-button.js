@@ -12,13 +12,14 @@ class MediaPlaybackRateButton extends MediaChromeButton {
   constructor() {
     super();
     this._rates = DEFAULT_RATES;
-
-    // Default
-    this.mediaPlaybackRateSet(1);
   }
 
   static get observedAttributes() {
     return ['rates'].concat(super.observedAttributes || []);
+  }
+
+  connectedCallback () {
+    this.mediaPlaybackRateSet(1);
   }
 
   // String of comma separated values, to match attribute
@@ -26,7 +27,7 @@ class MediaPlaybackRateButton extends MediaChromeButton {
     if (!rates) {
       this._rates = DEFAULT_RATES;
     } else {
-      if (typeof rates == 'string') {
+      if (typeof rates === 'string') {
         rates = rates.split(/,\s?/)
       }
 
