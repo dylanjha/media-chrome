@@ -26,7 +26,8 @@ const {
   MEDIA_PREVIEW_REQUEST,
   MEDIA_ENTER_PIP_REQUEST,
   MEDIA_EXIT_PIP_REQUEST,
-  MEDIA_PLAYBACK_RATE_REQUEST
+  MEDIA_PLAYBACK_RATE_REQUEST,
+  MEDIA_SHOW_TEXT_TRACK_REQUEST
 } = mediaUIEvents;
 
 class MediaController extends MediaContainer {
@@ -140,7 +141,31 @@ class MediaController extends MediaContainer {
             this.propagateMediaState('mediaPreviewCoords', `${x},${y},${w},${h}`);
           }
         }
-      }
+      },
+      MEDIA_SHOW_TEXT_TRACK_REQUEST: (e) => {
+        const media = this.media;
+        const label = e.detail;
+        console.log('debug label', label);
+
+
+        if (media && media.textTracks && media.textTracks.length) {
+          let foundMatch = false
+
+          Array.prototype.forEach.call(media.textTracks, (t) => {
+            if (t.label === label) {
+              foundMatch = true;
+              t.mode = 'showing';
+            } else {
+              t.mode = 'hidden';
+            }
+          });
+
+          if (!foundMatch) {
+            console.warn('Got MEDIA_SHOW_TEXT_TRACK_REQUEST but missing track for label', label);
+            return;
+          }
+        }
+      },
     };
 
     // Apply ui event listeners

@@ -10,6 +10,8 @@ const template = document.createElement('template');
 
 // const DEFAULT_RATES = [1, 1.25, 1.5, 1.75, 2];
 
+const { MEDIA_SHOW_TEXT_TRACK_REQUEST } = mediaUIEvents;
+
 template.innerHTML = `
   <style>
     #container {
@@ -17,6 +19,7 @@ template.innerHTML = `
     }
     ul {
       display: none;
+      list-style: none;
       position: absolute;
       bottom: 30px;
       margin-inline: 0;
@@ -71,7 +74,12 @@ class MediaTextTrackSelector extends MediaChromeButton {
     if (this._subtitleTextTracks && this._subtitleTextTracks.length) {
       this._subtitleTextTracks.forEach((track) => {
         const li = document.createElement('li');
-        li.innerText = track.label;
+        const btn = document.createElement('button');
+        btn.innerText = track.label;
+        btn.addEventListener('click', () => {
+          this.selectLang(track.label);
+        });
+        li.appendChild(btn);
         this.list.appendChild(li);
       });
     } else {
@@ -85,6 +93,10 @@ class MediaTextTrackSelector extends MediaChromeButton {
     } else {
       this.list.classList.add('showing');
     }
+  }
+
+  selectLang (label) {
+    this.dispatchMediaEvent(MEDIA_SHOW_TEXT_TRACK_REQUEST, { detail: label });
   }
 }
 
