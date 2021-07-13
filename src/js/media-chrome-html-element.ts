@@ -1,6 +1,7 @@
 import { defineCustomElement } from './utils/defineCustomElement.js';
 import { dashedToCamel } from './utils/stringUtils.js';
-import { Window as window, Document as document } from './utils/server-safe-globals.js';
+// import { Window as window, Document as document } from './utils/server-safe-globals';
+import { BaseElement } from './utils/dom';
 
 export const mediaUIEvents = {
   MEDIA_PLAY_REQUEST: 'mediaplayrequest',
@@ -23,7 +24,7 @@ type EventSettings = {
   detail: any;
 }
 
-export class MediaChromeHTMLElement extends window.HTMLElement {
+export class MediaChromeHTMLElement extends BaseElement {
   _mediaPaused: boolean;
   _mediaMuted: boolean;
   _mediaVolume: number;
