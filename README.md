@@ -12,7 +12,7 @@ Fully customizable media player controls using web components (native custom ele
 *From [Mux](https://mux.com/) and the creator of [Video.js](https://videojs.com/).*
 
 ```html
-<script type="module" src="https://unpkg.com/media-chrome@0.1"></script>
+<script type="module" src="https://unpkg.com/media-chrome@0.2"></script>
 
 <media-controller>
   <video
@@ -57,7 +57,7 @@ Load the module in the `<head>` of your HTML page. Note the `type="module"`, tha
 > Modules are always loaded asynchronously by the browser, so it's ok to load them in the head :thumbsup:, and best for registering web components quickly.
 
 ```html
-<script type="module" src="https://unpkg.com/media-chrome@0.1"></script>
+<script type="module" src="https://unpkg.com/media-chrome@0.2"></script>
 ```
 
 ### Option 2: Bundled via npm
@@ -139,6 +139,11 @@ Extras are not shipped with the core library, but can be imported as-needed by i
 ```js
 import 'media-chrome/dist/extras/media-clip-selector'
 ```
+
+```html
+<script type="module" src="https://unpkg.com/media-chrome@0.2/dist/extras/media-clip-selector"></script>
+```
+
 
 | Element                      | Description                                                                                          |
 |------------------------------|------------------------------------------------------------------------------------------------------|
