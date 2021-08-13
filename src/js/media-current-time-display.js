@@ -1,17 +1,21 @@
 import MediaTextDisplay from './media-text-display.js';
 import { defineCustomElement } from './utils/defineCustomElement.js';
 import { formatTime } from './utils/time.js';
-import { Document as document } from './utils/server-safe-globals.js';
+import { MediaUIAttributes } from './constants.js';
 // Todo: Use data locals: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
 
 class MediaCurrentTimeDisplay extends MediaTextDisplay {
-  constructor() {
-    super();
-    this.mediaCurrentTimeSet(0);
+
+  static get observedAttributes() {
+    return [MediaUIAttributes.MEDIA_CURRENT_TIME];
   }
 
-  mediaCurrentTimeSet(time) {
-    this.container.innerHTML = formatTime(time);
+  connectedCallback() {
+    this.setAttribute(MediaUIAttributes.MEDIA_CHROME_ATTRIBUTES, this.constructor.observedAttributes.join(' '));
+  }
+
+  attributeChangedCallback(_attrName, _oldValue, newValue) {
+    this.container.innerHTML = formatTime(newValue);
   }
 }
 

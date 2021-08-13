@@ -9,7 +9,7 @@
 */
 import { defineCustomElement } from './utils/defineCustomElement.js';
 import { Window as window, Document as document } from './utils/server-safe-globals.js';
-import { MediaChromeHTMLElement, mediaUIEvents } from './media-chrome-html-element.js';
+import { MediaUIEvents, MediaUIAttributes } from './constants.js';
 
 const template = document.createElement('template');
 
@@ -20,16 +20,18 @@ template.innerHTML = `
       position: relative;
 
       /* Position controls at the bottom  */
-      display: flex;
+      display: inline-flex;
       flex-direction: column-reverse;
 
-      /* Default dimensions
-       * max out at 100% width for smaller screens (< 720px)
-       * */
-      width: 720px;
+      /* Max out at 100% width for smaller screens (< 720px) */
       max-width: 100%;
-      height: 480px;
       background-color: #000;
+    }
+
+    /* Video specific styles */
+    :host(:not([audio])) {
+      height: 480px;
+      width: 720px;
     }
 
     /* Safari needs this to actually make the element fill the window */
@@ -48,36 +50,33 @@ template.innerHTML = `
       height: 100%;
     }
 
-    /* Hide controls when inactive and not paused */
-    #container ::slotted(*) {
+    /* Hide controls when inactive and not paused and not audio */
+    slot:not([media]) ::slotted() {
       opacity: 1;
       transition: opacity 0.25s;
       visibility: visible;
     }
 
-    :host([user-inactive]:not([media-paused])) #container ::slotted(*) {
+    :host([user-inactive]:not([${MediaUIAttributes.MEDIA_PAUSED}]):not([audio])) slot:not([media]) ::slotted(*) {
       opacity: 0;
       transition: opacity 1s;
     }
 
-    #container ::slotted(media-control-bar)  {
+    slot:not([media]) ::slotted(media-control-bar)  {
       width: 100%;
     }
   </style>
   <slot name="media"></slot>
-  <div id="container">
-    <slot></slot>
-  </div>
+  <slot></slot>
 `;
 
-class MediaContainer extends MediaChromeHTMLElement {
+class MediaContainer extends window.HTMLElement {
   constructor() {
     super();
 
     // Set up the Shadow DOM
     const shadow = this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
-    this.container = this.shadowRoot.getElementById('container');
 
     // Watch for child adds/removes and update the media element if necessary
     const mutationCallback = (mutationsList, observer) => {
@@ -166,11 +165,11 @@ class MediaContainer extends MediaChromeHTMLElement {
 
     // Toggle play/pause with clicks on the media element itself
     this._mediaClickPlayToggle = e => {
-      if (media.paused) {
-        this.dispatchMediaEvent(mediaUIEvents.MEDIA_PLAY_REQUEST);
-      } else {
-        this.dispatchMediaEvent(mediaUIEvents.MEDIA_PAUSE_REQUEST);
-      }
+
+      const eventName = media.paused
+        ? MediaUIEvents.MEDIA_PLAY_REQUEST
+        : MediaUIEvents.MEDIA_PAUSE_REQUEST;
+      this.dispatchEvent(new window.CustomEvent(eventName, { composed: true, bubbles: true }));
     }
     media.addEventListener('click', this._mediaClickPlayToggle, false);
 
@@ -206,11 +205,9 @@ class MediaContainer extends MediaChromeHTMLElement {
     // Allow for focus styles only when using the keyboard to navigate
     this.addEventListener('keyup', e => {
       this.setAttribute('media-keyboard-control', 'media-keyboard-control');
-      // this.container.classList.add('media-focus-visible');
     });
     this.addEventListener('mouseup', e => {
       this.removeAttribute('media-keyboard-control');
-      // this.container.classList.remove('media-focus-visible');
     });
 
     this.addEventListener('mousemove', e => {

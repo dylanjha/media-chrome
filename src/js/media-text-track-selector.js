@@ -1,16 +1,11 @@
 import MediaChromeButton from './media-chrome-button.js';
 import { defineCustomElement } from './utils/defineCustomElement.js';
-import { mediaUIEvents } from './media-chrome-html-element.js';
+import { MediaUIEvents } from './constants.js';
 import { Document as document } from './utils/server-safe-globals.js';
 
 const template = document.createElement('template');
-/*
-  <media-playback-rate-button rates="1,1.5,2">
-*/
 
-// const DEFAULT_RATES = [1, 1.25, 1.5, 1.75, 2];
-
-const { MEDIA_SHOW_TEXT_TRACK_REQUEST } = mediaUIEvents;
+const { MEDIA_SHOW_TEXT_TRACK_REQUEST } = MediaUIEvents;
 
 template.innerHTML = `
   <style>

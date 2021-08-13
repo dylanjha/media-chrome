@@ -1,6 +1,5 @@
-import MediaChromeHTMLElement from './media-chrome-html-element.js';
 import { defineCustomElement } from './utils/defineCustomElement.js';
-import { Document as document } from './utils/server-safe-globals.js';
+import { Window as window, Document as document } from './utils/server-safe-globals.js';
 
 const template = document.createElement('template');
 
@@ -69,20 +68,20 @@ template.innerHTML = `
   }
   button:active {}
 
-  svg,
-  ::slotted(*) {
+  svg, img, ::slotted(svg), ::slotted(img) {
     width: var(--media-button-icon-width, 24px);
     height: var(--media-button-icon-height);
     transform: var(--media-button-icon-transform);
     transition: var(--media-button-icon-transition);
     fill: var(--media-icon-color, #eee);
+    vertical-align: middle;
   }
 </style>
 
 <button></button>
 `;
 
-class MediaChromeButton extends MediaChromeHTMLElement {
+class MediaChromeButton extends window.HTMLElement {
   constructor(options={}) {
     super();
 

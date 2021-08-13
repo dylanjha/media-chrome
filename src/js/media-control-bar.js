@@ -3,9 +3,8 @@
 
   Auto position contorls in a line and set some base colors
 */
-import MediaChromeHTMLElement from './media-chrome-html-element.js';
 import { defineCustomElement } from './utils/defineCustomElement.js';
-import { Document as document } from './utils/server-safe-globals.js';
+import { Window as window, Document as document } from './utils/server-safe-globals.js';
 
 const template = document.createElement('template');
 
@@ -17,12 +16,10 @@ template.innerHTML = `
       box-sizing: border-box;
       display: inline-flex;
 
-      /* All putting the progress range at full width on other lines */
+      /* Allows putting the progress range at full width on other lines */
       flex-wrap: wrap;
 
       color: var(--media-icon-color, #eee);
-
-      /* background-color: var(--media-control-bar-background, rgba(20,20,30, 0.7)); */
     }
 
     ::slotted(*), :host > * {
@@ -40,11 +37,11 @@ template.innerHTML = `
   <slot></slot>
 `;
 
-class MediaControlBar extends MediaChromeHTMLElement {
+class MediaControlBar extends window.HTMLElement {
   constructor() {
     super();
 
-    var shadow = this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
