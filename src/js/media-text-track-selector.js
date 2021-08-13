@@ -1,6 +1,6 @@
 import MediaChromeButton from './media-chrome-button.js';
 import { defineCustomElement } from './utils/defineCustomElement.js';
-import { MediaUIEvents } from './constants.js';
+import { MediaUIEvents, MediaUIAttributes } from './constants.js';
 import { Document as document } from './utils/server-safe-globals.js';
 
 const template = document.createElement('template');
@@ -31,6 +31,10 @@ template.innerHTML = `
 `;
 
 class MediaTextTrackSelector extends MediaChromeButton {
+  static get observedAttributes() {
+    return [MediaUIAttributes.MEDIA_SUBTITLE_TRACKS];
+  }
+
   constructor() {
     super();
     this._subtitleTextTracks = null;
@@ -38,30 +42,22 @@ class MediaTextTrackSelector extends MediaChromeButton {
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
-  static get observedAttributes() {
-    return ['media-subtitle-tracks'].concat(super.observedAttributes || []);
-  }
-
   connectedCallback () {
     this.subtitlesButton = this.shadowRoot.querySelector('#subtitlesButton');
     this.list = this.shadowRoot.querySelector('ul');
     this.subtitlesButton.addEventListener('click', this._toggleList);
+    this.setAttribute(MediaUIAttributes.MEDIA_CHROME_ATTRIBUTES, this.constructor.observedAttributes.join(' '));
   }
 
-  set mediaSubtitleTracks (tracks) {
-    let parsed = null
+  attributeChangedCallback(_attrName, _oldValue, _newValue) {
     try {
-      parsed = JSON.parse(tracks);
+      const parsed = JSON.parse(_newValue);
       this._subtitleTextTracks = parsed;
       this.renderTrackItems();
     } catch (e) {
       console.warn('Error parsing media-subtitle-tracks', e);
       this._subtitleTextTracks = null;
     }
-  }
-
-  get mediaSubtitleTracks () {
-    return this._subtitleTextTracks;
   }
 
   renderTrackItems () {
@@ -91,7 +87,8 @@ class MediaTextTrackSelector extends MediaChromeButton {
   }
 
   selectLang (label) {
-    this.dispatchMediaEvent(MEDIA_SHOW_TEXT_TRACK_REQUEST, { detail: label });
+    const evt = new window.CustomEvent(MediaUIEvents.MEDIA_SHOW_TEXT_TRACK_REQUEST, { composed: true, bubbles: true, detail: label });
+    this.dispatchEvent(evt);
   }
 }
 

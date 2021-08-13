@@ -154,8 +154,6 @@ class MediaController extends MediaContainer {
       MEDIA_SHOW_TEXT_TRACK_REQUEST: (e) => {
         const media = this.media;
         const label = e.detail;
-        console.log('debug label', label);
-
 
         if (media && media.textTracks && media.textTracks.length) {
           let foundMatch = false
@@ -271,11 +269,6 @@ class MediaController extends MediaContainer {
       handler();
     });
 
-    const subtitleTracks = Array.prototype.filter.call(document.getElementsByTagName('video')[0].textTracks, (t) => t.kind === 'subtitles' || t.kind === 'captions');
-    this.propagateMediaState('mediaSubtitleTracks', JSON.stringify(subtitleTracks.map((t) => ({ kind: t.kind, label: t.label, language: t.language }))));
-
-    console.log('debug textTracks', subtitleTracks);
-
     // Update the media with the last set volume preference
     // This would preferably live with the media element,
     // not a control.
@@ -326,6 +319,9 @@ class MediaController extends MediaContainer {
       el.addEventListener(MediaUIEvents[key], this[`_handle${constToCamel(key, true)}`]);
     });
 
+    const subtitleTracks = Array.prototype.filter.call(this.media.textTracks, (t) => t.kind === 'subtitles' || t.kind === 'captions');
+    const subtitleTracksAttr = JSON.stringify(subtitleTracks.map((t) => ({ kind: t.kind, label: t.label, language: t.language })))
+
     // TODO: Update to propagate all states when registered
     if (this.media) {
       propagateMediaState([el], MediaUIAttributes.MEDIA_PAUSED, this.media.paused);
@@ -338,6 +334,7 @@ class MediaController extends MediaContainer {
       propagateMediaState([el], MediaUIAttributes.MEDIA_CURRENT_TIME, this.media.currentTime);
       propagateMediaState([el], MediaUIAttributes.MEDIA_DURATION, this.media.duration);
       propagateMediaState([el], MediaUIAttributes.MEDIA_PLAYBACK_RATE, this.media.playbackRate);
+      propagateMediaState([el], MediaUIAttributes.MEDIA_SUBTITLE_TRACKS, subtitleTracksAttr);
     }
   }
 
@@ -521,7 +518,7 @@ const propagateMediaState = (els, stateName, val) => {
     // Don't propagate into media elements, UI can't live in <video>
     // so just avoid potential conflicts
     if (el.slot === 'media') return;
-    
+
     const relevantAttrs = getMediaUIAttributesFrom(el);
     if (!relevantAttrs.includes(stateName)) return;
 
