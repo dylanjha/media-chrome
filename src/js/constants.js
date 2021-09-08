@@ -11,7 +11,8 @@ export const MediaUIEvents = {
     MEDIA_ENTER_PIP_REQUEST: 'mediaenterpiprequest',
     MEDIA_EXIT_PIP_REQUEST: 'mediaexitpiprequest',
     MEDIA_PLAYBACK_RATE_REQUEST: 'mediaplaybackraterequest',
-    MEDIA_SHOW_TEXT_TRACK_REQUEST: 'mediashowtexttrackrequest'
+    MEDIA_SHOW_TEXT_TRACK_REQUEST: 'mediashowtexttrackrequest',
+    MEDIA_CUE_CHANGE: 'mediacuechange'
 };
 
 export const MediaUIAttributes = {

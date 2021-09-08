@@ -3,11 +3,14 @@ import { defineCustomElement } from './utils/defineCustomElement.js';
 import { MediaUIEvents, MediaUIAttributes } from './constants.js';
 import { Document as document } from './utils/server-safe-globals.js';
 
-const template = document.createElement('template');
+const slotTemplate = document.createElement('template');
 
 const { MEDIA_SHOW_TEXT_TRACK_REQUEST } = MediaUIEvents;
 
-template.innerHTML = `
+const subtitlesIcon = 
+  '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>'
+
+slotTemplate.innerHTML = `
   <style>
     #container {
       position: relative;
@@ -20,13 +23,16 @@ template.innerHTML = `
       margin-inline: 0;
       padding-inline: 0;
     }
+    ul li {
+      cursor: pointer;
+    }
     ul.showing {
       display: block;
     }
   </style>
   <div id="container">
     <ul></ul>
-    <button id="subtitlesButton">cc</button>
+    <slot id="subtitlesButton" name="subtitles">${subtitlesIcon}</slot>
   </div>
 `;
 
@@ -35,11 +41,10 @@ class MediaTextTrackSelector extends MediaChromeButton {
     return [MediaUIAttributes.MEDIA_SUBTITLE_TRACKS];
   }
 
-  constructor() {
-    super();
+  constructor(options={}) {
+    super({ slotTemplate, ...options });
     this._subtitleTextTracks = null;
     this._toggleList = this.toggleList.bind(this);
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
   connectedCallback () {
